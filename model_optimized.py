@@ -125,34 +125,36 @@ def normalize_features(X):
     The dataset simulates the market value of cars based on kilometers driven 
     and years of manufacture.
 """
-np.random.seed(42)
-n_samples = 500
-kilometers = np.random.randint(0,200001, n_samples).reshape(-1,1)
-years = np.random.randint(2000,2024, n_samples).reshape(-1,1)
-base_value = 30000
-coef_km = -0.05
-coef_year = -1000
-noise = np.random.normal(0, 2000, n_samples).reshape(-1,1)
-market_value = base_value + coef_km * kilometers + coef_year * (2025 - years) + noise
+def main_data():
+    np.random.seed(42)
+    n_samples = 500
+    kilometers = np.random.randint(0,200001, n_samples).reshape(-1,1)
+    years = np.random.randint(2000,2024, n_samples).reshape(-1,1)
+    base_value = 30000
+    coef_km = -0.05
+    coef_year = -1000
+    noise = np.random.normal(0, 2000, n_samples).reshape(-1,1)
+    market_value = base_value + coef_km * kilometers + coef_year * (2025 - years) + noise
 
-# train data
-"""
-    Prepares the feature matrix and target vector for training.
-"""
-X = np.hstack([np.ones((n_samples, 1)), kilometers, 2025 - years])
-y = market_value.reshape(-1,)
+    # train data
+    """
+        Prepares the feature matrix and target vector for training.
+    """
+    X = np.hstack([np.ones((n_samples, 1)), kilometers, 2025 - years])
+    y = market_value.reshape(-1,)
 
-# Normalize features (except the bias term)
-X_normalized, mean_X, std_X = normalize_features(X[:, 1:])
+    # Normalize features (except the bias term)
+    X_normalized, mean_X, std_X = normalize_features(X[:, 1:])
 
 
-"""
-    Initializes parameters and runs gradient descent to find optimal weights and bias.
-"""
-b_init = 30000.0
-w_init = np.zeros(X_normalized.shape[1])
-alpha = 0.01
-iterations = 2000
-w_final, b_final, J_history = gradient_descent(X_normalized, y, w_init, b_init, compute_cost, compute_gradient, alpha, iterations)
+    """
+        Initializes parameters and runs gradient descent to find optimal weights and bias.
+    """
+    b_init = 30000.0
+    w_init = np.zeros(X_normalized.shape[1])
+    alpha = 0.01
+    iterations = 2000
+    w_final, b_final, J_history = gradient_descent(X_normalized, y, w_init, b_init, compute_cost, compute_gradient, alpha, iterations)
 
-print(f"Final model parameters: w = {w_final}, b = {b_final}")
+    print(f"Final model parameters: w = {w_final}, b = {b_final}")
+    return w_final, b_final,  mean_X, std_X
